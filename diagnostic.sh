@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #linkedin : https://www.linkedin.com/in/can-sayın-b332a157/
- 
+#cansayin.com
+
 DATE="`date +%Y%m%d-%H%M%S`"
 NAME="clickhouse-diag"
 DIR="/var/tmp"
