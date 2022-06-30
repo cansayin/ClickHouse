@@ -1,5 +1,6 @@
 
 #linkedin : https://www.linkedin.com/in/can-sayın-b332a157/
+#cansayin.com
 
 Controlled by session level setting send_logs_level Possible values: 'trace', 
 'debug', 'information', 'warning', 'error', 'fatal', 'none' 
