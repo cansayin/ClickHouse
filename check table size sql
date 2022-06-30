@@ -1,0 +1,56 @@
+#linkedin : https://www.linkedin.com/in/can-sayın-b332a157/
+
+
+# Query 1 
+SELECT formatReadableSize(total_bytes)
+FROM system.tables
+WHERE name = 'uk_price_paid'
+
+
+
+# Query 2
+select concat(database, '.', table)                         as table,
+       formatReadableSize(sum(bytes))                       as size,
+       sum(rows)                                            as rows,
+       max(modification_time)                               as latest_modification,
+       sum(bytes)                                           as bytes_size,
+       any(engine)                                          as engine,
+       formatReadableSize(sum(primary_key_bytes_in_memory)) as primary_keys_size
+from system.parts
+where active
+group by database, table
+order by bytes_size desc
+
+
+
+#Query 3 
+
+--- more information
+
+
+select parts.*,
+       columns.compressed_size,
+       columns.uncompressed_size,
+       columns.ratio
+from (
+         select table,
+                formatReadableSize(sum(data_uncompressed_bytes))          AS uncompressed_size,
+                formatReadableSize(sum(data_compressed_bytes))            AS compressed_size,
+                sum(data_compressed_bytes) / sum(data_uncompressed_bytes) AS ratio
+         from system.columns
+         where database = currentDatabase()
+         group by table
+         ) columns
+         rightjoin(
+    select table,
+           sum(rows)                                            asrows,
+           max(modification_time)                               aslatest_modification,
+           formatReadableSize(sum(bytes))                       asdisk_size,
+           formatReadableSize(sum(primary_key_bytes_in_memory)) as primary_keys_size,
+           any(engine)                                          asengine,
+           sum(bytes)                                           asbytes_size
+    from system.parts
+    where active and database = currentDatabase()
+    group by database, table
+    ) parts on columns.table = parts.table
+order by parts.bytes_size desc;
