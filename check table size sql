@@ -55,12 +55,12 @@ from (
          ) columns
          rightjoin(
     select table,
-           sum(rows)                                            asrows,
-           max(modification_time)                               aslatest_modification,
-           formatReadableSize(sum(bytes))                       asdisk_size,
+           sum(rows)                                            as rows,
+           max(modification_time)                               as latest_modification,
+           formatReadableSize(sum(bytes))                       as disk_size,
            formatReadableSize(sum(primary_key_bytes_in_memory)) as primary_keys_size,
-           any(engine)                                          asengine,
-           sum(bytes)                                           asbytes_size
+           any(engine)                                          as engine,
+           sum(bytes)                                           as bytes_size
     from system.parts
     where active and database = currentDatabase()
     group by database, table
